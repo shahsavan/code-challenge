@@ -21,12 +21,46 @@ class Result {
      */
 
     public static int formingMagicSquare(List<List<Integer>> matrix) {
-        var sum= matrix.stream()
-                .map(l->l.stream().mapToInt(Integer::intValue).sum())
-                .mapToInt(Integer::intValue)
-                .sum();
-        System.out.println(sum);
-        return 0;
+        int[][] inputMatrix = new int[3][3];
+
+        // Convert List<List<Integer>> to int[][]
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                inputMatrix[i][j] = matrix.get(i).get(j);
+            }
+        }
+
+        // All possible 3x3 magic squares
+        int[][][] magicSquares = {
+                {{8, 1, 6}, {3, 5, 7}, {4, 9, 2}},
+                {{6, 1, 8}, {7, 5, 3}, {2, 9, 4}},
+                {{4, 9, 2}, {3, 5, 7}, {8, 1, 6}},
+                {{2, 9, 4}, {7, 5, 3}, {6, 1, 8}},
+                {{8, 3, 4}, {1, 5, 9}, {6, 7, 2}},
+                {{4, 3, 8}, {9, 5, 1}, {2, 7, 6}},
+                {{6, 7, 2}, {1, 5, 9}, {8, 3, 4}},
+                {{2, 7, 6}, {9, 5, 1}, {4, 3, 8}}
+        };
+
+        int minCost = Integer.MAX_VALUE;
+
+        // Compare with each magic square and find the minimum cost
+        for (int[][] magic : magicSquares) {
+            int cost = calculateCost(inputMatrix, magic);
+            minCost = Math.min(minCost, cost);
+        }
+
+        return minCost;
+    }
+    // Calculate the transformation cost between two matrices
+    private static int calculateCost(int[][] matrix, int[][] magic) {
+        int cost = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                cost += Math.abs(matrix[i][j] - magic[i][j]);
+            }
+        }
+        return cost;
     }
 
 }
@@ -35,8 +69,8 @@ public class Solution {
     public static void main(String[] args) throws IOException {
 //        InputStream stream=System.in;
 //        String outputPath = System.getenv("OUTPUT_PATH");
-        InputStream stream=new FileInputStream("src/matrix/square/magic-square.txt");
-        String outputPath = "src/matrix/square/out_file";
+        InputStream stream=new FileInputStream("src/test/resources/matrix/square/magic-square.txt");
+        String outputPath = "src/test/resources/matrix/square/out_file";
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(outputPath));
 
