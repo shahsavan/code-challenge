@@ -115,8 +115,8 @@ class Result {
 
 public class Solution {
     public static void main(String[] args) throws IOException {
-//        InputStream in = new FileInputStream("src/SampleInput2");
-        InputStream in=System.in;
+        InputStream in = new FileInputStream("src/test/resources/matrix/rotation/rotation-input");
+//        InputStream in=System.in;
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
         String[] firstMultipleInput = bufferedReader.readLine().replaceAll("\\s+$", "").split(" ");

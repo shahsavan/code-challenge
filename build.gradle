@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    mainClass = 'matrix.rotation.Solution' // Or matrix.square.Solution if you want to run that one
+}
+
+// Create run configurations for each main class
+tasks.register('runMatrixRotation', JavaExec) {
+    group = 'application'
+    description = 'Run the matrix rotation main class'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'matrix.rotation.Solution'
+    standardInput = System.in // For reading input from console
+}
+tasks.register('runMagicSquare', JavaExec) {
+    group = 'application'
+    description = 'Run the magic square main class'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'matrix.square.Solution'
+}
