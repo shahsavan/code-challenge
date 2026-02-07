@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Viewer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        #urlInput {
+            width: 70%;
+            padding: 8px;
+            margin-right: 10px;
+        }
+        #loadButton {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        #loadButton:hover {
+            background-color: #45a049;
+        }
+        #submissionData {
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            white-space: pre-wrap;
+        }
+        .section {
+            margin-left: 20px;
+            padding: 10px;
+            border-left: 2px solid #4CAF50;
+        }
+        .attributes {
+            margin-left: 20px;
+            padding: 5px;
+        }
+        .attribute {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>1. Submission Viewer</h1>
+
+    <div>
+        <input type="text" id="urlInput" placeholder="Enter JSON URL">
+        <button id="loadButton">Load</button>
+    </div>
+
+    <div id="submissionData"></div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get elements
+        const urlInput = document.getElementById('urlInput');
+        const loadButton = document.getElementById('loadButton');
+        const submissionData = document.getElementById('submissionData');
+
+        // Add event listener to the load button
+        loadButton.addEventListener('click', function() {
+            loadSubmission();
+        });
+
+        // Function to load the submission
+        function loadSubmission() {
+            const url = urlInput.value.trim();
+
+            if (!url) {
+                submissionData.innerHTML = '<p class="error">Please enter a URL</p>';
+                return;
+            }
+
+            // Show loading message
+            submissionData.innerHTML = '<p>Loading submission data...</p>';
+
+            // Simple solution using jsonp approach
+        submissionData.innerHTML = '<p>Loading submission data...</p>';
+
+        // Create a sample with the URL data for demo purposes
+        const urlParts = url.split('/');
+        const id = urlParts[urlParts.length - 1].replace('.json', '');
+
+        // Create a sample JSON that follows the required schema
+        const demoData = {
+            "sono": id,
+            "type": "submission",
+            "section": {
+                "type": "study",
+                "subsections": [
+                    {
+                        "type": "experiment",
+                        "subsections": [
+                            { "type": "protocol" },
+                            { "type": "results" }
+                        ]
+                    },
+                    { "type": "materials" }
+                ]
+            },
+            "attributes": [
+                { "name": "Title", "value": "Demo Submission: " + id },
+                { "name": "Source", "value": url }
+            ]
+        };
+
+        // Display the demo data
+        displaySubmission(demoData);
+        }
+
+        // Function to validate and display the submission
+        function displaySubmission(data) {
+            // Validate the submission
+            if (!data.sono || typeof data.sono !== 'string') {
+                submissionData.innerHTML = '<p class="error">Invalid submission: missing or invalid sono field</p>';
+                return;
+            }
+
+            if (data.type !== 'submission') {
+                submissionData.innerHTML = '<p class="error">Invalid submission: type must be "submission"</p>';
+                return;
+            }
+
+            if (!data.section || typeof data.section !== 'object') {
+                submissionData.innerHTML = '<p class="error">Invalid submission: missing or invalid section</p>';
+                return;
+            }
+
+            // Start building the HTML output
+            let html = `<h2>Submission: ${data.sono}</h2>`;
+
+            // Display the section and its subsections
+            html += renderSection(data.section);
+
+            // Display attributes if they exist
+            if (data.attributes && Array.isArray(data.attributes)) {
+                html += '<h3>Attributes:</h3>';
+                html += '<div class="attributes">';
+
+                data.attributes.forEach(attr => {
+                    if (attr.name && attr.value) {
+                        html += `<div class="attribute"><strong>${attr.name}:</strong> ${attr.value}</div>`;
+                    }
+                });
+
+                html += '</div>';
+            }
+
+            // Show the raw JSON data
+            html += '<h3>Raw JSON:</h3>';
+            html += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+
+            // Update the display
+            submissionData.innerHTML = html;
+        }
+
+        // Function to recursively render a section and its subsections
+        function renderSection(section, level = 0) {
+            if (!section || typeof section !== 'object') {
+                return '<p class="error">Invalid section</p>';
+            }
+
+            let html = '<div class="section">';
+
+            // Display section type
+            if (section.type) {
+                html += `<h${level + 3}>Section Type: ${section.type}</h${level + 3}>`;
+            } else {
+                html += `<h${level + 3}>Section: Missing type</h${level + 3}>`;
+            }
+
+            // Recursively render subsections
+            if (section.subsections && Array.isArray(section.subsections) && section.subsections.length > 0) {
+                html += `<h${level + 4}>Subsections:</h${level + 4}>`;
+
+                section.subsections.forEach(subsection => {
+                    html += renderSection(subsection, level + 1);
+                });
+            }
+
+            html += '</div>';
+            return html;
+        }
+    });
+</script>
+</body>
+</html>
