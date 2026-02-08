@@ -44,6 +44,8 @@ func TestRotateRight(t *testing.T) {
 }
 func TestGetPass(t *testing.T) {
 	seq := day1.GetInputRecords()
-	pass := day1.GetPass(50, seq)
-	t.Fatalf("got %v", pass)
+	got := day1.GetPass(50, seq)
+	if got != 1034 {
+		t.Fatalf("expected 1034, go %d", got)
+	}
 }
