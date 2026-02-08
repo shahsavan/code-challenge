@@ -55,6 +55,6 @@ func TestGetPass(t *testing.T) {
 	seq := day1p2.GetInputRecords()
 	got := day1p2.GetPass(50, seq)
 	if got != 6166 {
-		t.Fatalf("expected 1034, got %d", got)
+		t.Fatalf("expected 6166, got %d", got)
 	}
 }
